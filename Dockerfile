@@ -1,0 +1,4 @@
+FROM pihole/pihole:latest
+
+ENV INTERFACE eth0
+ENV DNSMASQ_LISTENING ALL
