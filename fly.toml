@@ -1,8 +1,13 @@
-app = "public-pihole-fly"
+# fly.toml file generated for pihole-fly-tailscale on 2022-08-18T11:42:04+02:00
+
+app = "pihole-fly-tailscale"
 
 [[services]]
   internal_port = 53
   protocol = "udp"
 
-  [[services.ports]]
-    port = "53"
+  [[services.tcp_checks]]
+    grace_period = "15s"
+    interval = "15s"
+    restart_limit = 0
+    timeout = "2s"
