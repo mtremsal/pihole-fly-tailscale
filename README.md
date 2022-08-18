@@ -24,7 +24,7 @@ Pi-hole deployed at the edge on Fly.io and accessed via TailScale
 6. (optional) [Scale the VM](https://fly.io/docs/reference/scaling/#scaling-virtual-machines) to a dedicated CPU and 2 GB of RAM: `fly scale vm dedicated-cpu-1x`
 7. (optional) Troubleshoot the Pi-hole configuration via its web interface: `<tailscale IP>/admin`
 
-### (optional) Configure all devices to use Pi-hole for DNS when connecting to the TailScale network
+### Configure all devices to use Pi-hole for DNS when connecting to the TailScale network
 
 1. Open the [DNS configuration](https://login.tailscale.com/admin/dns) page
 2. Add nameserver > custom > enter the TailScale private IP for the Pi-hole
@@ -42,6 +42,7 @@ Pi-hole deployed at the edge on Fly.io and accessed via TailScale
 * Configuring a backup public [DNS nameserver in Tailscale](https://login.tailscale.com/admin/dns) breaks the setup as TailScale seems to respond with whatever DNS resolver is faster, rather than trying them in order. This turns out to be a pretty big issue as if the Pi-hole goes offline, DNS resolution fails completely across the network. I've opened a [feature request](https://github.com/tailscale/tailscale/issues/5397) in case I missed something obvious. There are two potential workarounds, but neither is ideal:
   * Configure DNS Resolution on each device with Pi-hole as primary and public DNS resolvers as backup
   * Disconnect a device entirely from TailScale when DNS misbehaves, so as to revert to its default DNS configuration.
+* Redeploying or upgrading Pi-hole leads to a new Fly.io instance, with a new TailScale private IP, thus requiring an update to the [DNS configuration](https://login.tailscale.com/admin/dns). This is rare enough for me as to be a non-issue, but it might be quite annoying for very frequent travelers.
 
 ## Open Questions
 
