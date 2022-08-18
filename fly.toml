@@ -1,7 +1,9 @@
-# fly.toml file generated for pihole-fly-tailscale on 2022-08-18T11:42:04+02:00
-
 app = "pihole-fly-tailscale"
 
+# This section helps Fly.io run health checks correctly.
+# Crucially, we do NOT map the `internal_port` to a public one with `[[services.ports]]`.
+# This is healthy defense in depth: while Pi-hole is configured to ignore DNS requests 
+# outside the tailscale0 network interface, it doesn't hurt to also keep all ports private.
 [[services]]
   internal_port = 53
   protocol = "udp"

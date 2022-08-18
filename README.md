@@ -37,16 +37,15 @@ Pi-hole deployed at the edge on Fly.io and accessed via TailScale
 
 ## Known Limitations
 
-* The Pi-hole currently starts before tailScale, resulting in a warning message in the Pi-hole diagnosis page that `interface tailscale0 does not currently exist`. Still, the Pi-hole resolves queries via its TailScale private IP, so this is not a real issue, merely a bit messy.
-* When Fly rolls out a new version, it relies on a blue-green deployment approach by default, which means that Tailscale will display more than one machine for a certain period of time. Being "ephemeral", they're dropped after some amount of time being inactive.
+* The Pi-hole currently starts before TailScale, resulting in a warning message in the Pi-hole diagnosis page that `interface tailscale0 does not currently exist`. Still, the Pi-hole properly resolves queries via its TailScale private IP, so this is not a real issue, merely a bit messy.
+* When Fly rolls out a new version, it relies on a blue-green deployment approach by default, which means that Tailscale will display more than one machine for a certain period of time. Thankfully, being "ephemeral", they're cleaned up after some amount of time being inactive.
 * Configuring a backup public [DNS nameserver in Tailscale](https://login.tailscale.com/admin/dns) breaks the setup as TailScale seems to respond with whatever DNS resolver is faster, rather than trying them in order. This turns out to be a pretty big issue as if the Pi-hole goes offline, DNS resolution fails completely across the network. There are two potential workarounds, but neither is ideal:
   * Configure DNS Resolution on each device with Pi-hole as primary and public DNS resolvers as backup, OR
-  * Disconnect a device entirely from TailScale when DNS misbehaves, so as to revert to its default configuration.
+  * Disconnect a device entirely from TailScale when DNS misbehaves, so as to revert to its default DNS configuration.
 
 ## Open Questions
 
 * What's a less messy way to keep Docker running after it executes its `CMD` than running `tail -f /dev/null`? 
-* Is there a way to show a private app, i.e. an app that doesn't expose any port to the public internet, as healthy in Fly.io? 
 * Is there a need to [disable TailScale key expiry](https://login.tailscale.com/admin/machines) for the Pi-hole machine? Probably not, given that the auth key can be reused.
 
 ## References
