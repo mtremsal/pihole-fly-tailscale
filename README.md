@@ -39,10 +39,11 @@ Pi-hole deployed at the edge on Fly.io and accessed via TailScale
 
 * The Pi-hole currently starts before TailScale, resulting in a warning message in the Pi-hole diagnosis page that `interface tailscale0 does not currently exist`. Still, the Pi-hole properly resolves queries via its TailScale private IP, so this is not a real issue, merely a bit messy.
 * When Fly rolls out a new version, it relies on a rolling or blue-green deployment approach by default, which means that Tailscale will display more than one machine for a certain period of time. Thankfully, being "ephemeral", they're cleaned up after some amount of time being inactive.
-* Configuring a backup public [DNS nameserver in Tailscale](https://login.tailscale.com/admin/dns) breaks the setup as TailScale seems to respond with whatever DNS resolver is faster, rather than trying them in order. This turns out to be a pretty big issue as if the Pi-hole goes offline, DNS resolution fails completely across the network. I've opened a [feature request](https://github.com/tailscale/tailscale/issues/5397) in case I missed something obvious. There are two potential workarounds, but neither is ideal:
+* Configuring a backup public [DNS nameserver in Tailscale](https://login.tailscale.com/admin/dns) breaks the setup as TailScale seems to respond with whatever DNS resolver is faster, rather than trying them in order. This turns out to be a pretty big issue if the Pi-hole goes offline, as DNS resolution fails completely across the network. I've opened a [feature request](https://github.com/tailscale/tailscale/issues/5397) but this is a pretty niche use case so don't hold your breath. Workarounds include:
   * Configure DNS Resolution on each device with Pi-hole as primary and public DNS resolvers as backup
   * Disconnect a device entirely from TailScale when DNS misbehaves, so as to revert to its default DNS configuration.
-* Redeploying or upgrading Pi-hole leads to a new Fly.io instance, with a new TailScale private IP, thus requiring an update to the [DNS configuration](https://login.tailscale.com/admin/dns). This is rare enough for me as to be a non-issue, but it might be quite annoying for very frequent travelers.
+  * Scale to two Fly.io regions for redundancy and add both TailScale IPs as DNS nameservers. This only works if relying on the essentially stateless OOTB setup for Pi-hole.; It also breaks unified reporting.
+* Redeploying or upgrading Pi-hole leads to a new Fly.io instance, with a new TailScale private IP, thus requiring an update to the [DNS configuration](https://login.tailscale.com/admin/dns). This is rare enough for me as to be a non-issue, but it might be quite annoying for very frequent travelers. As a workaround, `mdeeks` [points out on HN](https://news.ycombinator.com/item?id=32517060) that it should be possible to persist the "machine key" stored in `tailscaled.state` across restarts. 
 
 ## Open Questions
 
@@ -56,6 +57,7 @@ Pi-hole deployed at the edge on Fly.io and accessed via TailScale
 
 ## References
 
+*  [HN discussion thread - news.ycombinator.com](https://news.ycombinator.com/item?id=32512576)
 *  [Stuff Your Pi-Hole From Anywhere - fly.io](https://fly.io/blog/stuff-your-pi-hole-from-anywhere/)
 *  [Access a Pi-hole from anywhere - tailscale.com](https://tailscale.com/kb/1114/pi-hole/)
 *  [Tailscale on Fly.io - tailscale.com](https://tailscale.com/kb/1132/flydotio/)
