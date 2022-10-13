@@ -1,6 +1,8 @@
 # pihole-fly-tailscale
 Pi-hole deployed at the edge on Fly.io and accessed via TailScale
 
+Update: this setup was made obsolete by Tailscale [integrating natively with NextDNS](https://tailscale.com/blog/nextdns/).
+
 ## Goals and Constraints
 
 * Pi-hole is usable as a DNS resolver by trusted laptops and mobile devices
